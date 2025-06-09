@@ -2,6 +2,13 @@ const boardElement = document.getElementById('board');
 const messageElement = document.getElementById('message');
 const charactersElement = document.getElementById('characters');
 const checkButton = document.getElementById('check');
+const timerElement = document.getElementById('time');
+const numberPopup = document.getElementById('number-popup');
+
+let timerStarted = false;
+let startTime = 0;
+let timerInterval = null;
+let activeInput = null;
 
 const animals = ['🐱','🐶','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯'];
 
@@ -23,6 +30,10 @@ function startGame(level) {
   puzzle = removeCells(solution, empties);
   renderBoard(puzzle);
   messageElement.textContent = '';
+  hidePopup();
+  timerStarted = false;
+  clearInterval(timerInterval);
+  timerElement.textContent = '0';
 }
 
 function generateBoard() {
@@ -90,6 +101,20 @@ function renderBoard(data) {
         input.dataset.col = c;
         input.addEventListener('input', (e) => {
           e.target.value = e.target.value.replace(/[^1-9]/g, '');
+          const val = parseInt(e.target.value);
+          puzzle[r][c] = isNaN(val) ? null : val;
+          if (!timerStarted) startTimer();
+          if (isSolved(puzzle)) {
+            messageElement.textContent = '완성! 축하합니다!';
+            stopTimer();
+          }
+        });
+        input.addEventListener('focus', () => {
+          activeInput = input;
+          showPopup(input, r, c);
+        });
+        input.addEventListener('blur', () => {
+          setTimeout(hidePopup, 100);
         });
         cell.appendChild(input);
       }
@@ -109,6 +134,7 @@ function checkBoard() {
 
   if (isSolved(puzzle)) {
     messageElement.textContent = '완성! 축하합니다!';
+    stopTimer();
   } else {
     messageElement.textContent = '아직 완성되지 않았어요.';
   }
@@ -133,6 +159,48 @@ function isValid(board, row, col, num) {
     if (boxRow !== row && boxCol !== col && board[boxRow][boxCol] === num) return false;
   }
   return true;
+}
+
+function startTimer() {
+  timerStarted = true;
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const secs = Math.floor((Date.now() - startTime) / 1000);
+    timerElement.textContent = String(secs);
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerStarted = false;
+}
+
+function showPopup(input, r, c) {
+  const allowed = [];
+  for (let n = 1; n <= 9; n++) {
+    if (isValid(puzzle, r, c, n)) allowed.push(n);
+  }
+  numberPopup.innerHTML = '';
+  allowed.forEach(num => {
+    const btn = document.createElement('button');
+    btn.textContent = num;
+    btn.addEventListener('click', () => {
+      input.value = String(num);
+      input.dispatchEvent(new Event('input'));
+      input.focus();
+      hidePopup();
+    });
+    numberPopup.appendChild(btn);
+  });
+  const rect = input.getBoundingClientRect();
+  numberPopup.style.top = rect.bottom + window.scrollY + 'px';
+  numberPopup.style.left = rect.left + window.scrollX + 'px';
+  numberPopup.style.display = 'block';
+}
+
+function hidePopup() {
+  numberPopup.style.display = 'none';
+  numberPopup.innerHTML = '';
 }
 
 checkButton.addEventListener('click', checkBoard);

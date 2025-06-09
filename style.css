@@ -29,6 +29,7 @@ h1 {
   grid-template-rows: repeat(9, 40px);
   gap: 2px;
   width: fit-content;
+  position: relative;
 }
 .cell {
   width: 40px;
@@ -55,4 +56,32 @@ h1 {
 #message {
   margin-top: 10px;
   font-weight: bold;
+}
+
+#timer {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#number-popup {
+  position: absolute;
+  display: none;
+  background: #fff;
+  border: 1px solid var(--dark-green);
+  padding: 4px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
+#number-popup button {
+  width: 24px;
+  height: 24px;
+  margin: 2px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
