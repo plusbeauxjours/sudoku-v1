@@ -1,10 +1,17 @@
-# 귀여운 스도쿠 게임
+# Sudoku Remix App
 
-이 저장소는 10단계 난이도를 가진 스도쿠 게임입니다. 난이도는 귀여운 동물 캐릭터를 클릭하여 선택할 수 있으며, 베이지와 그린 계열의 어스톤 컬러 배치를 사용합니다.
+This project demonstrates a simple Sudoku solver built with [Remix](https://remix.run/), styled using [Tailwind CSS](https://tailwindcss.com/) and animated with [Framer Motion](https://www.framer.com/motion/).
 
-## 실행 방법
+## Development
 
-1. 이 저장소를 클론하거나 다운로드합니다.
-2. `index.html` 파일을 브라우저로 열면 게임을 즐길 수 있습니다.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-난이도 버튼을 클릭하면 퍼즐이 생성되며, `정답 확인` 버튼으로 현재 입력한 값이 올바른지 확인할 수 있습니다.
+2. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+The app shows a Sudoku puzzle solved on load with each cell animated.
