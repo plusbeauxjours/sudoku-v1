@@ -3,5 +3,7 @@ module.exports = {
   appDirectory: "app",
   serverBuildDirectory: "build",
   publicPath: "/build/",
-  serverModuleFormat: "cjs"
+  serverModuleFormat: "cjs",
+  tailwind: true,
+  postcss: true,
 };

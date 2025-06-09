@@ -9,9 +9,11 @@
   "dependencies": {
     "@remix-run/node": "^1.19.0",
     "@remix-run/react": "^1.19.0",
+    "@remix-run/serve": "^1.19.0",
+    "framer-motion": "^10.12.16",
+    "isbot": "^3.6.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "framer-motion": "^10.12.16"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.19.0",
@@ -21,5 +23,6 @@
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.4"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
