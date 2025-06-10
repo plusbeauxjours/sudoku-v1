@@ -181,9 +181,10 @@ function showPopup(input, r, c) {
     if (isValid(puzzle, r, c, n)) allowed.push(n);
   }
   numberPopup.innerHTML = '';
-  allowed.forEach(num => {
+  for (let num = 1; num <= 9; num++) {
     const btn = document.createElement('button');
     btn.textContent = num;
+    if (!allowed.includes(num)) btn.disabled = true;
     btn.addEventListener('click', () => {
       input.value = String(num);
       input.dispatchEvent(new Event('input'));
@@ -191,14 +192,26 @@ function showPopup(input, r, c) {
       hidePopup();
     });
     numberPopup.appendChild(btn);
+  }
+  const zeroBtn = document.createElement('button');
+  zeroBtn.textContent = '0';
+  zeroBtn.classList.add('zero');
+  zeroBtn.addEventListener('click', () => {
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+    hidePopup();
   });
+  numberPopup.appendChild(zeroBtn);
   const rect = input.getBoundingClientRect();
   numberPopup.style.top = rect.bottom + window.scrollY + 'px';
   numberPopup.style.left = rect.left + window.scrollX + 'px';
-  numberPopup.style.display = 'block';
+  numberPopup.style.display = 'grid';
+  requestAnimationFrame(() => numberPopup.classList.add('show'));
 }
 
 function hidePopup() {
+  numberPopup.classList.remove('show');
   numberPopup.style.display = 'none';
   numberPopup.innerHTML = '';
 }
