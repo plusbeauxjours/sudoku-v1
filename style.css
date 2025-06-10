@@ -72,16 +72,38 @@ h1 {
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   z-index: 100;
+  grid-template-columns: repeat(3, 32px);
+  grid-template-rows: repeat(4, 32px);
+  gap: 4px;
+  transform-origin: top left;
+}
+
+@keyframes popup {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+#number-popup.show {
+  animation: popup 0.2s ease-out;
 }
 
 #number-popup button {
-  width: 24px;
-  height: 24px;
-  margin: 2px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
   background: var(--green);
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+}
+
+#number-popup button.zero {
+  grid-column: 2 / 3;
+}
+
+#number-popup button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
