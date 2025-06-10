@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Board } from "../utils/sudoku";
 import { generatePuzzle, isSolved } from "../utils/sudoku";
 
@@ -7,12 +7,31 @@ const animals = ["🐱","🐶","🐭","🐹","🐰","🦊","🐻","🐼","🐨",
 export default function SudokuBoard() {
   const [puzzle, setPuzzle] = useState<Board | null>(null);
   const [message, setMessage] = useState("");
+  const [time, setTime] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [running, setRunning] = useState(false);
+
+  const startTimer = () => {
+    if (timerRef.current) return;
+    setRunning(true);
+    timerRef.current = setInterval(() => setTime((t) => t + 1), 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setRunning(false);
+  };
 
   const startGame = (level: number) => {
     const empties = 20 + level * 5;
     const { puzzle } = generatePuzzle(empties);
     setPuzzle(puzzle);
     setMessage("");
+    stopTimer();
+    setTime(0);
   };
 
   const updateCell = (row: number, col: number, value: string) => {
@@ -21,17 +40,31 @@ export default function SudokuBoard() {
     const next = puzzle.map((r) => r.slice());
     next[row][col] = isNaN(num) ? 0 : num;
     setPuzzle(next);
+    if (!running) startTimer();
+    if (isSolved(next)) {
+      setMessage("완성! 축하합니다!");
+      stopTimer();
+    }
   };
 
   const checkBoard = () => {
     if (!puzzle) return;
-    if (isSolved(puzzle)) setMessage("완성! 축하합니다!");
-    else setMessage("아직 완성되지 않았어요.");
+    if (isSolved(puzzle)) {
+      setMessage("완성! 축하합니다!");
+      stopTimer();
+    } else setMessage("아직 완성되지 않았어요.");
   };
+
+  useEffect(() => {
+    return () => {
+      stopTimer();
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center space-y-4 py-6 text-center">
       <h1 className="text-2xl font-bold">귀여운 스도쿠</h1>
+      <p className="font-bold">시간: {time}초</p>
       <div>
         <p>난이도를 선택하세요:</p>
         <div className="flex flex-wrap justify-center gap-1 mt-1">
