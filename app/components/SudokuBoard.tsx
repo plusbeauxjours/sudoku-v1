@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Board } from "../utils/sudoku";
-import { generatePuzzle, isSolved } from "../utils/sudoku";
+import { generatePuzzle, isSolved, isValidPlacement } from "../utils/sudoku";
 
 const animals = ["🐱","🐶","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯"];
 
@@ -10,6 +10,12 @@ export default function SudokuBoard() {
   const [time, setTime] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [running, setRunning] = useState(false);
+  const boardRef = useRef<HTMLDivElement | null>(null);
+  const activeInputRef = useRef<HTMLInputElement | null>(null);
+  const [popup, setPopup] = useState<
+    | { row: number; col: number; top: number; left: number; allowed: number[] }
+    | null
+  >(null);
 
   const startTimer = () => {
     if (timerRef.current) return;
@@ -47,6 +53,37 @@ export default function SudokuBoard() {
     }
   };
 
+  const showPopup = (
+    row: number,
+    col: number,
+    input: HTMLInputElement
+  ) => {
+    if (!puzzle || !boardRef.current) return;
+    activeInputRef.current = input;
+    const allowed: number[] = [];
+    for (let n = 1; n <= 9; n++) {
+      if (isValidPlacement(puzzle, row, col, n)) allowed.push(n);
+    }
+    const rect = input.getBoundingClientRect();
+    const parentRect = boardRef.current.getBoundingClientRect();
+    setPopup({
+      row,
+      col,
+      top: rect.bottom - parentRect.top,
+      left: rect.left - parentRect.left,
+      allowed,
+    });
+  };
+
+  const hidePopup = () => setPopup(null);
+
+  const selectNumber = (num: number) => {
+    if (!popup) return;
+    updateCell(popup.row, popup.col, num === 0 ? "" : String(num));
+    activeInputRef.current?.focus();
+    hidePopup();
+  };
+
   const checkBoard = () => {
     if (!puzzle) return;
     if (isSolved(puzzle)) {
@@ -81,8 +118,11 @@ export default function SudokuBoard() {
         </div>
       </div>
       {puzzle && (
-        <>
-          <div className="grid grid-cols-9 gap-1 mt-4">
+        <> 
+          <div
+            ref={boardRef}
+            className="grid grid-cols-9 gap-1 mt-4 relative"
+          >
             {puzzle.map((row, r) =>
               row.map((cell, c) =>
                 cell !== 0 ? (
@@ -101,9 +141,36 @@ export default function SudokuBoard() {
                     onChange={(e) =>
                       updateCell(r, c, e.target.value.replace(/[^1-9]/g, ""))
                     }
+                    onFocus={(e) => showPopup(r, c, e.currentTarget)}
+                    onBlur={() => setTimeout(hidePopup, 100)}
                   />
                 )
               )
+            )}
+            {popup && (
+              <div
+                className="absolute grid grid-cols-3 gap-1 p-1 bg-white border rounded shadow z-10"
+                style={{ top: popup.top, left: popup.left }}
+              >
+                {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => (
+                  <button
+                    key={n}
+                    className="w-8 h-8 text-sm rounded bg-green-600 text-white disabled:bg-gray-300"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => selectNumber(n)}
+                    disabled={!popup.allowed.includes(n)}
+                  >
+                    {n}
+                  </button>
+                ))}
+                <button
+                  className="w-8 h-8 text-sm rounded bg-green-600 text-white col-span-3"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => selectNumber(0)}
+                >
+                  0
+                </button>
+              </div>
             )}
           </div>
           <button
