@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +7,15 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>귀여운 스도쿠</h1>
+  <h1>Cute Sudoku</h1>
   <div id="difficulty">
-    <p>난이도를 선택하세요:</p>
-    <div id="characters"></div>
+    <label for="level">Difficulty: <span id="level-display">1</span></label>
+    <input type="range" id="level" min="1" max="10" value="1">
   </div>
   <div id="board"></div>
   <div id="number-popup"></div>
-  <p id="timer">시간: <span id="time">0</span>초</p>
-  <button id="check">정답 확인</button>
+  <p id="timer">Time: <span id="time">00:00:00</span></p>
+  <button id="check">Check Answer</button>
   <p id="message"></p>
 <script src="script.js"></script>
 </body>

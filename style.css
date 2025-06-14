@@ -12,22 +12,16 @@ body {
 h1 {
   color: var(--dark-green);
 }
-#characters button {
-  font-size: 24px;
-  background: var(--green);
-  color: #fff;
-  border: none;
+#difficulty input[type="range"] {
+  width: 200px;
   margin: 4px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
 }
 #board {
   margin: 20px auto;
   display: grid;
   grid-template-columns: repeat(9, 40px);
   grid-template-rows: repeat(9, 40px);
-  gap: 2px;
+  gap: 0;
   width: fit-content;
   position: relative;
 }
@@ -39,6 +33,26 @@ h1 {
   font-size: 20px;
   border: 1px solid var(--dark-green);
   background: #fff;
+}
+.cell:nth-child(9n+1),
+.cell:nth-child(9n+4),
+.cell:nth-child(9n+7) {
+  border-left: 2px solid var(--dark-green);
+}
+.cell:nth-child(9n+3),
+.cell:nth-child(9n+6),
+.cell:nth-child(9n) {
+  border-right: 2px solid var(--dark-green);
+}
+.cell:nth-child(-n+9),
+.cell:nth-child(n+28):nth-child(-n+36),
+.cell:nth-child(n+55):nth-child(-n+63) {
+  border-top: 2px solid var(--dark-green);
+}
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54),
+.cell:nth-child(n+73) {
+  border-bottom: 2px solid var(--dark-green);
 }
 .cell.prefilled {
   background: var(--beige);

@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { Board } from "../utils/sudoku";
 import { generatePuzzle, isSolved, isValidPlacement } from "../utils/sudoku";
 
-const animals = ["🐱","🐶","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯"];
-
 export default function SudokuBoard() {
+  const [level, setLevel] = useState(1);
+
   const [puzzle, setPuzzle] = useState<Board | null>(null);
   const [message, setMessage] = useState("");
   const [time, setTime] = useState(0);
@@ -24,6 +24,13 @@ export default function SudokuBoard() {
     timerRef.current = setInterval(() => setTime((t) => t + 1), 1000);
   };
 
+  const formatTime = (secs: number) => {
+    const h = String(Math.floor(secs / 3600)).padStart(2, "0");
+    const m = String(Math.floor((secs % 3600) / 60)).padStart(2, "0");
+    const s = String(secs % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
+
   const stopTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -41,6 +48,15 @@ export default function SudokuBoard() {
     setTime(0);
   };
 
+  const getBorderClasses = (r: number, c: number) => {
+    const classes = ["border", "border-gray-300"];
+    if (r % 3 === 0) classes.push("border-t-2");
+    if ((r + 1) % 3 === 0) classes.push("border-b-2");
+    if (c % 3 === 0) classes.push("border-l-2");
+    if ((c + 1) % 3 === 0) classes.push("border-r-2");
+    return classes.join(" ");
+  };
+
   const updateCell = (row: number, col: number, value: string) => {
     if (!puzzle) return;
     const num = parseInt(value);
@@ -49,7 +65,7 @@ export default function SudokuBoard() {
     setPuzzle(next);
     if (!running) startTimer();
     if (isSolved(next)) {
-      setMessage("완성! 축하합니다!");
+      setMessage("Puzzle solved! Congratulations!");
       stopTimer();
     }
   };
@@ -105,12 +121,13 @@ export default function SudokuBoard() {
   const checkBoard = () => {
     if (!puzzle) return;
     if (isSolved(puzzle)) {
-      setMessage("완성! 축하합니다!");
+      setMessage("Puzzle solved! Congratulations!");
       stopTimer();
-    } else setMessage("아직 완성되지 않았어요.");
+    } else setMessage("Not solved yet.");
   };
 
   useEffect(() => {
+    startGame(level);
     return () => {
       stopTimer();
     };
@@ -118,42 +135,45 @@ export default function SudokuBoard() {
 
   return (
     <div className="flex flex-col items-center space-y-4 py-6 text-center">
-      <h1 className="text-2xl font-bold">귀여운 스도쿠</h1>
-      <p className="font-bold">시간: {time}초</p>
-      <div>
-        <p>난이도를 선택하세요:</p>
-        <div className="flex flex-wrap justify-center gap-1 mt-1">
-          {animals.map((a, i) => (
-            <button
-              key={i}
-              title={`난이도 ${i + 1}`}
-              className="px-2 py-1 bg-green-600 text-white rounded"
-              onClick={() => startGame(i + 1)}
-            >
-              {a}
-            </button>
-          ))}
-        </div>
+      <h1 className="text-2xl font-bold">Cute Sudoku</h1>
+      <p className="font-bold">Time: {formatTime(time)}</p>
+      <div className="flex flex-col items-center">
+        <label htmlFor="level">Difficulty: {level}</label>
+        <input
+          id="level"
+          type="range"
+          min="1"
+          max="10"
+          value={level}
+          onChange={(e) => {
+            const lvl = parseInt(e.target.value);
+            setLevel(lvl);
+            startGame(lvl);
+          }}
+        />
       </div>
       {puzzle && (
         <> 
           <div
             ref={boardRef}
-            className="grid grid-cols-9 gap-1 mt-4 relative"
+            className="grid grid-cols-9 gap-0 mt-4 relative"
           >
             {puzzle.map((row, r) =>
               row.map((cell, c) =>
                 cell !== 0 ? (
                   <div
                     key={`${r}-${c}`}
-                    className="w-8 h-8 flex items-center justify-center border bg-gray-100 font-bold"
+                    className={`w-8 h-8 flex items-center justify-center bg-gray-100 font-bold ${getBorderClasses(
+                      r,
+                      c
+                    )}`}
                   >
                     {cell}
                   </div>
                 ) : (
                   <input
                     key={`${r}-${c}`}
-                    className="w-8 h-8 text-center border"
+                    className={`w-8 h-8 text-center ${getBorderClasses(r, c)}`}
                     maxLength={1}
                     value={cell === 0 ? "" : cell}
                     onChange={(e) =>
@@ -197,7 +217,7 @@ export default function SudokuBoard() {
             className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
             onClick={checkBoard}
           >
-            정답 확인
+            Check Answer
           </button>
         </>
       )}

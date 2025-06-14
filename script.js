@@ -1,6 +1,7 @@
 const boardElement = document.getElementById('board');
 const messageElement = document.getElementById('message');
-const charactersElement = document.getElementById('characters');
+const levelSlider = document.getElementById('level');
+const levelDisplay = document.getElementById('level-display');
 const checkButton = document.getElementById('check');
 const timerElement = document.getElementById('time');
 const numberPopup = document.getElementById('number-popup');
@@ -11,15 +12,10 @@ let timerInterval = null;
 let activeInput = null;
 let hidePopupTimeout = null;
 
-const animals = ['🐱','🐶','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯'];
 
-// Create difficulty buttons with cute characters
-animals.forEach((animal, index) => {
-  const btn = document.createElement('button');
-  btn.textContent = animal;
-  btn.title = `난이도 ${index + 1}`;
-  btn.addEventListener('click', () => startGame(index + 1));
-  charactersElement.appendChild(btn);
+levelSlider.addEventListener('input', () => {
+  levelDisplay.textContent = levelSlider.value;
+  startGame(parseInt(levelSlider.value));
 });
 
 let solution = [];
@@ -34,7 +30,7 @@ function startGame(level) {
   hidePopup();
   timerStarted = false;
   clearInterval(timerInterval);
-  timerElement.textContent = '0';
+  timerElement.textContent = formatTime(0);
 }
 
 function generateBoard() {
@@ -106,7 +102,7 @@ function renderBoard(data) {
           puzzle[r][c] = isNaN(val) ? null : val;
           if (!timerStarted) startTimer();
           if (isSolved(puzzle)) {
-            messageElement.textContent = '완성! 축하합니다!';
+            messageElement.textContent = 'Puzzle solved! Congratulations!';
             stopTimer();
           }
         });
@@ -134,10 +130,10 @@ function checkBoard() {
   });
 
   if (isSolved(puzzle)) {
-    messageElement.textContent = '완성! 축하합니다!';
+    messageElement.textContent = 'Puzzle solved! Congratulations!';
     stopTimer();
   } else {
-    messageElement.textContent = '아직 완성되지 않았어요.';
+    messageElement.textContent = 'Not solved yet.';
   }
 }
 
@@ -162,12 +158,19 @@ function isValid(board, row, col, num) {
   return true;
 }
 
+function formatTime(secs) {
+  const h = String(Math.floor(secs / 3600)).padStart(2, '0');
+  const m = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+  const s = String(secs % 60).padStart(2, '0');
+  return `${h}:${m}:${s}`;
+}
+
 function startTimer() {
   timerStarted = true;
   startTime = Date.now();
   timerInterval = setInterval(() => {
     const secs = Math.floor((Date.now() - startTime) / 1000);
-    timerElement.textContent = String(secs);
+    timerElement.textContent = formatTime(secs);
   }, 1000);
 }
 
@@ -233,3 +236,4 @@ function hidePopup() {
 }
 
 checkButton.addEventListener('click', checkBoard);
+startGame(parseInt(levelSlider.value));
