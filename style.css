@@ -1,16 +1,17 @@
 :root {
-  --beige: #f5f5dc;
-  --green: #6b8e23;
-  --dark-green: #556b2f;
+  --bg: #f3f4f6;
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --text: #374151;
 }
 body {
-  font-family: sans-serif;
+  font-family: 'Inter', sans-serif;
   text-align: center;
-  background: var(--beige);
-  color: var(--dark-green);
+  background: var(--bg);
+  color: var(--text);
 }
 h1 {
-  color: var(--dark-green);
+  color: var(--primary-dark);
 }
 #difficulty input[type="range"] {
   width: 200px;
@@ -24,6 +25,9 @@ h1 {
   gap: 0;
   width: fit-content;
   position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 .cell {
   width: 40px;
@@ -31,41 +35,51 @@ h1 {
   text-align: center;
   line-height: 40px;
   font-size: 20px;
-  border: 1px solid var(--dark-green);
+  border: 1px solid var(--primary-dark);
   background: #fff;
+  transition: background 0.2s;
+  user-select: none;
 }
 .cell:nth-child(9n+1),
 .cell:nth-child(9n+4),
 .cell:nth-child(9n+7) {
-  border-left: 2px solid var(--dark-green);
+  border-left: 2px solid var(--primary-dark);
 }
 .cell:nth-child(9n+3),
 .cell:nth-child(9n+6),
 .cell:nth-child(9n) {
-  border-right: 2px solid var(--dark-green);
+  border-right: 2px solid var(--primary-dark);
 }
 .cell:nth-child(-n+9),
 .cell:nth-child(n+28):nth-child(-n+36),
 .cell:nth-child(n+55):nth-child(-n+63) {
-  border-top: 2px solid var(--dark-green);
+  border-top: 2px solid var(--primary-dark);
 }
 .cell:nth-child(n+19):nth-child(-n+27),
 .cell:nth-child(n+46):nth-child(-n+54),
 .cell:nth-child(n+73) {
-  border-bottom: 2px solid var(--dark-green);
+  border-bottom: 2px solid var(--primary-dark);
 }
 .cell.prefilled {
-  background: var(--beige);
+  background: var(--bg);
   font-weight: bold;
 }
+
+.cell input:focus {
+  outline: 2px solid var(--primary);
+}
 #check {
-  background: var(--green);
+  background: var(--primary);
   color: #fff;
   border: none;
   padding: 8px 16px;
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
+  transition: background 0.2s;
+}
+#check:hover {
+  background: var(--primary-dark);
 }
 #message {
   margin-top: 10px;
@@ -81,7 +95,7 @@ h1 {
   position: absolute;
   display: none;
   background: #fff;
-  border: 1px solid var(--dark-green);
+  border: 1px solid var(--primary-dark);
   padding: 4px;
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
@@ -105,7 +119,7 @@ h1 {
   width: 32px;
   height: 32px;
   margin: 0;
-  background: var(--green);
+  background: var(--primary);
   color: #fff;
   border: none;
   border-radius: 4px;
