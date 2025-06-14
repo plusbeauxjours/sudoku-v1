@@ -98,7 +98,6 @@ function renderBoard(data) {
         input.dataset.col = c;
         input.addEventListener('input', (e) => {
           e.target.value = e.target.value.replace(/[^0-9]/g, '');
-          if (e.target.value === '0') e.target.value = '';
           const val = parseInt(e.target.value);
           puzzle[r][c] = isNaN(val) ? null : val;
           if (!timerStarted) startTimer();
@@ -206,7 +205,7 @@ function showPopup(input, r, c) {
   zeroBtn.textContent = '0';
   zeroBtn.classList.add('zero');
   zeroBtn.addEventListener('click', () => {
-    input.value = '';
+    input.value = '0';
     input.dispatchEvent(new Event('input'));
     input.focus();
     hidePopup();

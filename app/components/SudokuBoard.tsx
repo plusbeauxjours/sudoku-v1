@@ -61,7 +61,7 @@ export default function SudokuBoard() {
     if (!puzzle) return;
     const num = parseInt(value);
     const next = puzzle.map((r) => r.slice());
-    next[row][col] = isNaN(num) || num === 0 ? 0 : num;
+    next[row][col] = isNaN(num) ? 0 : num;
     setPuzzle(next);
     if (!running) startTimer();
     if (isSolved(next)) {
@@ -113,7 +113,7 @@ export default function SudokuBoard() {
 
   const selectNumber = (num: number) => {
     if (!popup) return;
-    updateCell(popup.row, popup.col, num === 0 ? "" : String(num));
+    updateCell(popup.row, popup.col, String(num));
     activeInputRef.current?.focus();
     hidePopup();
   };
@@ -175,12 +175,12 @@ export default function SudokuBoard() {
                     key={`${r}-${c}`}
                     className={`w-8 h-8 text-center outline-none ${getBorderClasses(r, c)}`}
                     maxLength={1}
-                    value={cell === 0 ? "" : cell}
+                    value={cell === 0 ? "0" : cell}
                     onChange={(e) =>
                       updateCell(
                         r,
                         c,
-                        e.target.value.replace(/[^0-9]/g, "").replace(/^0$/, "")
+                        e.target.value.replace(/[^0-9]/g, "")
                       )
                     }
                     onFocus={(e) => showPopup(r, c, e.currentTarget)}
