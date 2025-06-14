@@ -9,6 +9,7 @@ let timerStarted = false;
 let startTime = 0;
 let timerInterval = null;
 let activeInput = null;
+let hidePopupTimeout = null;
 
 const animals = ['🐱','🐶','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯'];
 
@@ -114,7 +115,7 @@ function renderBoard(data) {
           showPopup(input, r, c);
         });
         input.addEventListener('blur', () => {
-          setTimeout(hidePopup, 100);
+          hidePopupTimeout = setTimeout(hidePopup, 100);
         });
         cell.appendChild(input);
       }
@@ -176,6 +177,10 @@ function stopTimer() {
 }
 
 function showPopup(input, r, c) {
+  if (hidePopupTimeout) {
+    clearTimeout(hidePopupTimeout);
+    hidePopupTimeout = null;
+  }
   const allowed = [];
   for (let n = 1; n <= 9; n++) {
     if (isValid(puzzle, r, c, n)) allowed.push(n);
@@ -224,6 +229,7 @@ function hidePopup() {
   numberPopup.classList.remove('show');
   numberPopup.style.display = 'none';
   numberPopup.innerHTML = '';
+  hidePopupTimeout = null;
 }
 
 checkButton.addEventListener('click', checkBoard);

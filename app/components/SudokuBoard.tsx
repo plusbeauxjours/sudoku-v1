@@ -12,6 +12,7 @@ export default function SudokuBoard() {
   const [running, setRunning] = useState(false);
   const boardRef = useRef<HTMLDivElement | null>(null);
   const activeInputRef = useRef<HTMLInputElement | null>(null);
+  const hidePopupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [popup, setPopup] = useState<
     | { row: number; col: number; top: number; left: number; allowed: number[] }
     | null
@@ -58,6 +59,10 @@ export default function SudokuBoard() {
     col: number,
     input: HTMLInputElement
   ) => {
+    if (hidePopupTimeoutRef.current) {
+      clearTimeout(hidePopupTimeoutRef.current);
+      hidePopupTimeoutRef.current = null;
+    }
     if (!puzzle || !boardRef.current) return;
     activeInputRef.current = input;
     const allowed: number[] = [];
@@ -85,7 +90,10 @@ export default function SudokuBoard() {
     });
   };
 
-  const hidePopup = () => setPopup(null);
+  const hidePopup = () => {
+    setPopup(null);
+    hidePopupTimeoutRef.current = null;
+  };
 
   const selectNumber = (num: number) => {
     if (!popup) return;
@@ -152,7 +160,9 @@ export default function SudokuBoard() {
                       updateCell(r, c, e.target.value.replace(/[^1-9]/g, ""))
                     }
                     onFocus={(e) => showPopup(r, c, e.currentTarget)}
-                    onBlur={() => setTimeout(hidePopup, 100)}
+                    onBlur={() => {
+                      hidePopupTimeoutRef.current = setTimeout(hidePopup, 100);
+                    }}
                   />
                 )
               )
