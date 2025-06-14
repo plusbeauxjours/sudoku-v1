@@ -97,7 +97,8 @@ function renderBoard(data) {
         input.dataset.row = r;
         input.dataset.col = c;
         input.addEventListener('input', (e) => {
-          e.target.value = e.target.value.replace(/[^1-9]/g, '');
+          e.target.value = e.target.value.replace(/[^0-9]/g, '');
+          if (e.target.value === '0') e.target.value = '';
           const val = parseInt(e.target.value);
           puzzle[r][c] = isNaN(val) ? null : val;
           if (!timerStarted) startTimer();

@@ -61,7 +61,7 @@ export default function SudokuBoard() {
     if (!puzzle) return;
     const num = parseInt(value);
     const next = puzzle.map((r) => r.slice());
-    next[row][col] = isNaN(num) ? 0 : num;
+    next[row][col] = isNaN(num) || num === 0 ? 0 : num;
     setPuzzle(next);
     if (!running) startTimer();
     if (isSolved(next)) {
@@ -134,7 +134,7 @@ export default function SudokuBoard() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center space-y-4 py-6 text-center">
+    <div className="flex flex-col items-center space-y-4 py-6 text-center font-sans">
       <h1 className="text-2xl font-bold">Cute Sudoku</h1>
       <p className="font-bold">Time: {formatTime(time)}</p>
       <div className="flex flex-col items-center">
@@ -156,14 +156,14 @@ export default function SudokuBoard() {
         <> 
           <div
             ref={boardRef}
-            className="grid grid-cols-9 gap-0 mt-4 relative"
+            className="grid grid-cols-9 gap-0 mt-4 relative rounded shadow-lg bg-white"
           >
             {puzzle.map((row, r) =>
               row.map((cell, c) =>
                 cell !== 0 ? (
                   <div
                     key={`${r}-${c}`}
-                    className={`w-8 h-8 flex items-center justify-center bg-gray-100 font-bold ${getBorderClasses(
+                    className={`w-8 h-8 flex items-center justify-center bg-gray-100 font-semibold ${getBorderClasses(
                       r,
                       c
                     )}`}
@@ -173,11 +173,15 @@ export default function SudokuBoard() {
                 ) : (
                   <input
                     key={`${r}-${c}`}
-                    className={`w-8 h-8 text-center ${getBorderClasses(r, c)}`}
+                    className={`w-8 h-8 text-center outline-none ${getBorderClasses(r, c)}`}
                     maxLength={1}
                     value={cell === 0 ? "" : cell}
                     onChange={(e) =>
-                      updateCell(r, c, e.target.value.replace(/[^1-9]/g, ""))
+                      updateCell(
+                        r,
+                        c,
+                        e.target.value.replace(/[^0-9]/g, "").replace(/^0$/, "")
+                      )
                     }
                     onFocus={(e) => showPopup(r, c, e.currentTarget)}
                     onBlur={() => {
@@ -195,7 +199,7 @@ export default function SudokuBoard() {
                 {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => (
                   <button
                     key={n}
-                    className="w-8 h-8 text-sm rounded bg-green-600 text-white disabled:bg-gray-300"
+                    className="w-8 h-8 text-sm rounded bg-indigo-600 text-white disabled:bg-gray-300"
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => selectNumber(n)}
                     disabled={!popup.allowed.includes(n)}
@@ -204,7 +208,7 @@ export default function SudokuBoard() {
                   </button>
                 ))}
                 <button
-                  className="w-8 h-8 text-sm rounded bg-green-600 text-white col-span-3"
+                  className="w-8 h-8 text-sm rounded bg-indigo-600 text-white col-span-3"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => selectNumber(0)}
                 >
@@ -214,7 +218,7 @@ export default function SudokuBoard() {
             )}
           </div>
           <button
-            className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
+            className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded"
             onClick={checkBoard}
           >
             Check Answer
