@@ -204,9 +204,19 @@ function showPopup(input, r, c) {
   });
   numberPopup.appendChild(zeroBtn);
   const rect = input.getBoundingClientRect();
-  numberPopup.style.top = rect.bottom + window.scrollY + 'px';
-  numberPopup.style.left = rect.left + window.scrollX + 'px';
+  const boardRect = boardElement.getBoundingClientRect();
   numberPopup.style.display = 'grid';
+  let top = rect.bottom + window.scrollY;
+  let left = rect.left + window.scrollX;
+  const popupRect = numberPopup.getBoundingClientRect();
+  const maxLeft = boardRect.right + window.scrollX - popupRect.width;
+  const minLeft = boardRect.left + window.scrollX;
+  if (left > maxLeft) left = Math.max(minLeft, maxLeft);
+  if (left < minLeft) left = minLeft;
+  const maxTop = boardRect.bottom + window.scrollY - popupRect.height;
+  if (top > maxTop) top = rect.top + window.scrollY - popupRect.height;
+  numberPopup.style.top = top + 'px';
+  numberPopup.style.left = left + 'px';
   requestAnimationFrame(() => numberPopup.classList.add('show'));
 }
 

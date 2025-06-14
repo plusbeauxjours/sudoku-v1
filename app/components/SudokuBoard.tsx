@@ -66,11 +66,21 @@ export default function SudokuBoard() {
     }
     const rect = input.getBoundingClientRect();
     const parentRect = boardRef.current.getBoundingClientRect();
+    let top = rect.bottom - parentRect.top;
+    let left = rect.left - parentRect.left;
+    const popupWidth = 112;
+    const popupHeight = 148;
+    const maxLeft = parentRect.width - popupWidth;
+    if (left > maxLeft) left = Math.max(0, maxLeft);
+    if (left < 0) left = 0;
+    const maxTop = parentRect.height - popupHeight;
+    if (top > maxTop) top = rect.top - parentRect.top - popupHeight;
+    if (top < 0) top = 0;
     setPopup({
       row,
       col,
-      top: rect.bottom - parentRect.top,
-      left: rect.left - parentRect.left,
+      top,
+      left,
       allowed,
     });
   };
