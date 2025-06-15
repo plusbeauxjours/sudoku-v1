@@ -9,8 +9,14 @@ export const links: LinksFunction = () => [
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Sudoku",
+  title: "Cute Sudoku",
   viewport: "width=device-width,initial-scale=1",
+  description:
+    "Play a fun Sudoku puzzle built with Remix and Tailwind CSS. Track your time and improve your skills.",
+  keywords: "sudoku, puzzle game, remix, react, tailwind",
+  "og:title": "Cute Sudoku",
+  "og:description":
+    "Interactive Sudoku puzzle built with Remix and Tailwind CSS.",
 });
 
 export default function App() {
