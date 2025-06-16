@@ -24,13 +24,13 @@ export const meta: MetaFunction = () => ({
 export default function App() {
   return (
     <html lang="en" className="h-full">
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2931981606209596"
-      />
       <head>
         <Meta />
         <Links />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2931981606209596"
+        />
       </head>
       <body className="h-full">
         <Outlet />
