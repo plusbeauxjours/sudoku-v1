@@ -29,7 +29,7 @@ export default function App() {
         <Links />
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2931981606209596"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5456098975903123"
           crossOrigin="anonymous"
         />
       </head>
